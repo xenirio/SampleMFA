@@ -31,6 +31,7 @@ namespace SampleMFA.IdentityServer.Repositories
                 EncryptedPassword = password.Sha256(),
                 Phone = phone
             });
+            _db.SaveChanges();
         }
     }
 }

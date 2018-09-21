@@ -37,27 +37,25 @@ namespace SampleMFA.IdentityServer
                             },
                             AllowOfflineAccess = true
                         }
-                    });
+                    })
+                    .AddExtensionGrantValidator<AuthenticationGrant>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                        options.UseInMemoryDatabase("SampleMFA")
-                    );
+                    options.UseInMemoryDatabase("SampleMFA")
+                );
 
-            services.AddTransient<IAccountRepository, IAccountRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
+
+            services.AddMvc()
+                    .AddControllersAsServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            app.UseCors("default");
+            app.UseIdentityServer();
+            app.UseMvc();
         }
     }
 }
